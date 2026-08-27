@@ -1,0 +1,78 @@
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  /* nothing special on the li itself */
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: var(--tree-item-height);
+  padding-right: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row:hover {
+  background: var(--tree-hover-bg);
+  color: var(--text-primary);
+}
+
+.row.active {
+  background: var(--tree-active-bg);
+  color: var(--text-primary);
+}
+
+/* Chevron */
+.chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.chevronSpacer {
+  width: 14px;
+  flex-shrink: 0;
+}
+
+/* File / folder icon */
+.fileIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.row:hover .fileIcon {
+  color: var(--text-secondary);
+}
+
+.row.active .fileIcon {
+  color: var(--accent);
+}
+
+/* File name */
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

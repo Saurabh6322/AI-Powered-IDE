@@ -1,0 +1,15 @@
+.wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Override Monaco's default background to match our theme */
+.wrapper :global(.monaco-editor),
+.wrapper :global(.monaco-editor .overflow-guard) {
+  background-color: var(--editor-bg) !important;
+}
+
+.wrapper :global(.monaco-editor .margin) {
+  background-color: var(--editor-bg) !important;
+}

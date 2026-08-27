@@ -1,0 +1,74 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 0 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-app-region: drag; /* allows window dragging in Electron-like envs */
+}
+
+.titleText {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.aiToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.aiToggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.aiToggle:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-secondary);
+  color: var(--accent);
+}
+
+.aiToggleActive {
+  color: var(--accent);
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+}
+
+.layout {
+  display: grid;
+  flex: 1;
+  overflow: hidden;
+}

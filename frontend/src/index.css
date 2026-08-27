@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* ================================================================
+   AI-Powered IDE — Design System Tokens
+   ================================================================
+   All theming goes through CSS custom properties so we can swap
+   entire palettes by toggling a class on <html>.  The Tailwind
+   @theme block re-exports selected tokens so they work with
+   utility classes (e.g. `bg-[var(--bg-primary)]`).
+
+   Theme hierarchy:
+     :root          → Dark theme (Antigravity default)
+     .theme-dark    → Same as :root (explicit selector)
+     .theme-light   → Light theme
+     .theme-custom  → High-contrast neon/Dracula-inspired
+   ================================================================ */
+
+@theme {
+  --color-primary: var(--accent);
+  --color-bg-base: var(--bg-primary);
+  --color-text-base: var(--text-primary);
+}
+
+/* ----------------------------------------------------------------
+   Shared (non-color) tokens — same across all themes
+   ---------------------------------------------------------------- */
+:root {
+  /* — Layout — */
+  --sidebar-width: 260px;
+  --sidebar-min-width: 180px;
+  --sidebar-max-width: 480px;
+  --tab-height: 38px;
+  --resize-handle-width: 4px;
+  --tree-indent: 16px;
+  --tree-item-height: 28px;
+
+  /* — Typography — */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+  --font-size-xs: 0.6875rem;   /* 11px */
+  --font-size-sm: 0.75rem;     /* 12px */
+  --font-size-base: 0.8125rem; /* 13px */
+
+  /* — Transitions — */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+}
+
+/* ================================================================
+   DARK THEME (DEFAULT — Antigravity IDE style)
+   ================================================================ */
+:root,
+.theme-dark {
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-muted: rgba(124, 58, 237, 0.15);
+
+  --bg-primary: #0f1117;
+  --bg-secondary: #161822;
+  --bg-tertiary: #1c1f2e;
+  --bg-elevated: #232738;
+
+  --sidebar-bg: #13151f;
+  --editor-bg: #0f1117;
+
+  --tab-bg: #161822;
+  --tab-active-bg: #0f1117;
+  --tab-hover-bg: #1c1f2e;
+  --tab-border: #2a2d3e;
+
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-primary: #1e2235;
+  --border-secondary: #2a2d3e;
+
+  --resize-handle: #2a2d3e;
+  --resize-handle-hover: #7c3aed;
+
+  --scrollbar-thumb: #2a2d3e;
+  --scrollbar-thumb-hover: #3a3f55;
+  --scrollbar-track: transparent;
+
+  --tree-hover-bg: rgba(124, 58, 237, 0.08);
+  --tree-active-bg: rgba(124, 58, 237, 0.15);
+
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --monaco-theme: vs-dark;
+}
+
+/* ================================================================
+   LIGHT THEME
+   ================================================================ */
+.theme-light {
+  --accent: #6d28d9;
+  --accent-hover: #5b21b6;
+  --accent-muted: rgba(109, 40, 217, 0.10);
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-tertiary: #f1f3f5;
+  --bg-elevated: #e9ecef;
+
+  --sidebar-bg: #f4f5f7;
+  --editor-bg: #ffffff;
+
+  --tab-bg: #f8f9fb;
+  --tab-active-bg: #ffffff;
+  --tab-hover-bg: #f1f3f5;
+  --tab-border: #e2e5ea;
+
+  --text-primary: #1a1d27;
+  --text-secondary: #5a6070;
+  --text-muted: #8b92a5;
+
+  --border-primary: #e2e5ea;
+  --border-secondary: #d1d5db;
+
+  --resize-handle: #d1d5db;
+  --resize-handle-hover: #6d28d9;
+
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #b0b6c3;
+  --scrollbar-track: transparent;
+
+  --tree-hover-bg: rgba(109, 40, 217, 0.06);
+  --tree-active-bg: rgba(109, 40, 217, 0.12);
+
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-error: #dc2626;
+  --color-info: #2563eb;
+
+  --monaco-theme: vs;
+}
+
+/* ================================================================
+   CUSTOM THEME (High-contrast Neon / Dracula-inspired)
+   ================================================================ */
+.theme-custom {
+  --accent: #bd93f9;
+  --accent-hover: #a87cf7;
+  --accent-muted: rgba(189, 147, 249, 0.18);
+
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #1f2b47;
+  --bg-elevated: #273552;
+
+  --sidebar-bg: #141428;
+  --editor-bg: #1a1a2e;
+
+  --tab-bg: #16213e;
+  --tab-active-bg: #1a1a2e;
+  --tab-hover-bg: #1f2b47;
+  --tab-border: #2d3a5e;
+
+  --text-primary: #f8f8f2;
+  --text-secondary: #c3c7d9;
+  --text-muted: #7a80a0;
+
+  --border-primary: #2d3a5e;
+  --border-secondary: #3d4a6e;
+
+  --resize-handle: #3d4a6e;
+  --resize-handle-hover: #bd93f9;
+
+  --scrollbar-thumb: #3d4a6e;
+  --scrollbar-thumb-hover: #5a6a8e;
+  --scrollbar-track: transparent;
+
+  --tree-hover-bg: rgba(189, 147, 249, 0.08);
+  --tree-active-bg: rgba(189, 147, 249, 0.18);
+
+  --color-success: #50fa7b;
+  --color-warning: #f1fa8c;
+  --color-error: #ff5555;
+  --color-info: #8be9fd;
+
+  --monaco-theme: vs-dark;
+}
+
+/* ----------------------------------------------------------------
+   Global base styles
+   ---------------------------------------------------------------- */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+  }
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--accent-muted);
+    color: var(--text-primary);
+  }
+}
