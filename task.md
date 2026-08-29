@@ -42,13 +42,13 @@ This document tracks the entire 22-sprint (9-phase) roadmap as defined in `AGENT
 - ✅ **Sprint 9: Vector Database & Embeddings**
   - ✅ Set up ChromaDB locally
   - ✅ Generate local embeddings (`nomic-embed-text` or `sentence-transformers`)
-- ⭕ **Sprint 10: RAG Implementation**
-  - ⭕ Build background indexing jobs for the project workspace (via Redis queue)
-  - ⭕ Update AI chat to provide context-aware responses based on workspace files
+- ✅ **Sprint 10: RAG Implementation**
+  - ✅ Build background indexing jobs for the project workspace (via Redis queue)
+  - ✅ Update AI chat to provide context-aware responses based on workspace files
 
 ## Phase 5: Advanced Agents + Git Integration (Sprints 11-13)
-- ⭕ **Sprint 11: Agent Orchestration Engine**
-  - ⭕ Build a hand-rolled Python agent loop (Plan → Act → Observe)
+- ✅ **Sprint 11: Agent Orchestration Engine**
+  - ✅ Build a hand-rolled Python agent loop (Plan → Act → Observe)
 - ⭕ **Sprint 12: Specialized Agents**
   - ⭕ Develop Coding and Testing agents
   - ⭕ Develop Debugging and Code Review agents

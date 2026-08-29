@@ -9,3 +9,5 @@ websockets
 watchdog
 httpx
 chromadb
+redis
+rq

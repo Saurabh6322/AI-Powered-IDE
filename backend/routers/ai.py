@@ -75,9 +75,30 @@ async def chat(request: Request) -> StreamingResponse:
     body = await request.json()
     messages = body.get("messages", [])
     model = body.get("model", DEFAULT_MODEL)
+    use_context = body.get("use_context", False)
+
+    augmented_system_prompt = SYSTEM_PROMPT
+
+    if use_context and messages:
+        last_user_msg = next((m["content"] for m in reversed(messages) if m["role"] == "user"), None)
+        if last_user_msg:
+            try:
+                from services.indexer import search
+                results = await search(last_user_msg, n_results=3)
+                if results:
+                    context_str = "\n\n".join(
+                        f"File: {r.file_path} (Lines {r.start_line}-{r.end_line})\n```{r.language}\n{r.text}\n```"
+                        for r in results
+                    )
+                    augmented_system_prompt += (
+                        "\n\nHere is some context from the user's codebase that might be relevant:\n"
+                        f"{context_str}"
+                    )
+            except Exception as e:
+                logger.error(f"Failed to fetch context: {e}")
 
     # Prepend system prompt
-    full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
+    full_messages = [{"role": "system", "content": augmented_system_prompt}] + messages
 
     async def event_stream():
         try:

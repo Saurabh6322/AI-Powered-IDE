@@ -25,8 +25,9 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import styles from "./ChatPanel.module.css";
 
 interface ChatMessage {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "tool";
   content: string;
+  tool_calls?: any[];
 }
 
 interface OllamaModel {
@@ -42,6 +43,7 @@ export default function ChatPanel() {
   const [models, setModels] = useState<OllamaModel[]>([]);
   const [selectedModel, setSelectedModel] = useState("");
   const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
+  const [useContext, setUseContext] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -88,15 +90,17 @@ export default function ChatPanel() {
       setMessages([...updatedMessages, assistantMsg]);
 
       try {
-        const resp = await fetch("/api/ai/chat", {
+        const resp = await fetch("/api/agents/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: updatedMessages.map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
+            messages: updatedMessages.map((m) => {
+              const msg: any = { role: m.role, content: m.content };
+              if (m.tool_calls) msg.tool_calls = m.tool_calls;
+              return msg;
+            }),
             model: selectedModel || undefined,
+            use_context: useContext,
           }),
         });
 
@@ -107,6 +111,7 @@ export default function ChatPanel() {
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
         let accumulated = "";
+        let accumulatedToolCalls: any[] = [];
 
         while (true) {
           const { done, value } = await reader.read();
@@ -126,6 +131,9 @@ export default function ChatPanel() {
               if (payload.token) {
                 accumulated += payload.token;
               }
+              if (payload.tool_calls) {
+                accumulatedToolCalls = payload.tool_calls;
+              }
             } catch {
               // skip malformed SSE lines
             }
@@ -137,6 +145,7 @@ export default function ChatPanel() {
             copy[copy.length - 1] = {
               role: "assistant",
               content: accumulated,
+              tool_calls: accumulatedToolCalls.length > 0 ? accumulatedToolCalls : undefined,
             };
             return copy;
           });
@@ -272,6 +281,11 @@ export default function ChatPanel() {
             <div className={styles.msgBubble}>
               {msg.role === "user" ? (
                 <p className={styles.userText}>{msg.content}</p>
+              ) : msg.role === "tool" ? (
+                <div className={styles.toolResult}>
+                  <span className={styles.toolIcon}>🛠️</span>
+                  <span className={styles.toolText}>Tool result: {msg.content.substring(0, 100)}{msg.content.length > 100 ? "..." : ""}</span>
+                </div>
               ) : (
                 <div className={styles.markdown}>
                   <ReactMarkdown
@@ -294,7 +308,7 @@ export default function ChatPanel() {
                                     onClick={() => applyToEditor(codeString)}
                                     title="Apply to Editor"
                                   >
-                                    🪄 Apply
+                                    Apply
                                   </button>
                                   <button
                                     className={styles.copyBtn}
@@ -331,8 +345,34 @@ export default function ChatPanel() {
                     }}
                   >
                     {msg.content ||
-                      (isStreaming && i === messages.length - 1 ? "●" : "")}
+                      (isStreaming && i === messages.length - 1 && !msg.tool_calls ? "●" : "")}
                   </ReactMarkdown>
+
+                  {/* Tool Calls Rendering */}
+                  {msg.tool_calls && msg.tool_calls.length > 0 && (
+                    <div className={styles.toolCalls}>
+                      <div className={styles.toolCallsTitle}>Planned Actions:</div>
+                      {msg.tool_calls.map((tc, idx) => (
+                        <div key={idx} className={styles.toolCallItem}>
+                          <strong>{tc.function?.name}</strong>(
+                          <span className={styles.toolCallArgs}>
+                            {typeof tc.function?.arguments === 'string' 
+                              ? tc.function?.arguments 
+                              : JSON.stringify(tc.function?.arguments)}
+                          </span>
+                          )
+                        </div>
+                      ))}
+                      {i === messages.length - 1 && !isStreaming && (
+                        <button 
+                          className={styles.approveBtn}
+                          onClick={() => sendMessage("Looks good, proceed.")}
+                        >
+                          ✅ Approve & Execute
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -349,6 +389,16 @@ export default function ChatPanel() {
       </div>
 
       {/* Input */}
+      <div className={styles.contextToggle}>
+        <label>
+          <input
+            type="checkbox"
+            checked={useContext}
+            onChange={(e) => setUseContext(e.target.checked)}
+          />
+          <span className={styles.toggleText}>🔍 Use Codebase Context</span>
+        </label>
+      </div>
       <div className={styles.inputArea}>
         <textarea
           ref={inputRef}

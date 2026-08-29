@@ -177,6 +177,18 @@ def _collect_files(workspace: Path) -> list[Path]:
     return files
 
 
+import asyncio
+
+def run_indexing_sync(workspace: Path | None = None) -> dict:
+    """Synchronous wrapper for RQ worker to run the async indexing."""
+    stats = asyncio.run(index_workspace(workspace))
+    return {
+        "files_indexed": stats.files_indexed,
+        "chunks_created": stats.chunks_created,
+        "chunks_embedded": stats.chunks_embedded,
+        "duration_seconds": stats.duration_seconds,
+    }
+
 async def index_workspace(workspace: Path | None = None) -> IndexStats:
     """
     Index all eligible files in the workspace into ChromaDB.
