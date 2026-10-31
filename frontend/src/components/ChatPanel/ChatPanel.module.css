@@ -90,6 +90,22 @@
   border-color: var(--accent);
 }
 
+.personaSelect {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  outline: none;
+  max-width: 140px;
+  cursor: pointer;
+}
+
+.personaSelect:focus {
+  border-color: var(--accent);
+}
+
 /* Messages area */
 .messages {
   flex: 1;

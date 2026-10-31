@@ -7,6 +7,7 @@ from routers.collab import router as collab_router
 from routers.ai import router as ai_router
 from routers.rag import router as rag_router
 from routers.agents import router as agents_router
+from routers.git import router as git_router
 
 app = FastAPI(title="AI-Powered IDE Backend")
 
@@ -31,6 +32,7 @@ app.include_router(collab_router)
 app.include_router(ai_router)
 app.include_router(rag_router)
 app.include_router(agents_router)
+app.include_router(git_router)
 
 
 @app.get("/api/health")

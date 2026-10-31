@@ -49,12 +49,12 @@ This document tracks the entire 22-sprint (9-phase) roadmap as defined in `AGENT
 ## Phase 5: Advanced Agents + Git Integration (Sprints 11-13)
 - ✅ **Sprint 11: Agent Orchestration Engine**
   - ✅ Build a hand-rolled Python agent loop (Plan → Act → Observe)
-- ⭕ **Sprint 12: Specialized Agents**
-  - ⭕ Develop Coding and Testing agents
-  - ⭕ Develop Debugging and Code Review agents
-- ⭕ **Sprint 13: Git Integration**
-  - ⭕ Integrate GitPython and GitHub REST API on backend
-  - ⭕ Build UI for committing, branching, and viewing PR metadata
+- ✅ **Sprint 12: Specialized Agents**
+  - ✅ Develop Coding and Testing agents
+  - ✅ Develop Debugging and Code Review agents
+- ✅ **Sprint 13: Git Integration**
+  - ✅ Integrate GitPython and GitHub REST API on backend
+  - ✅ Build UI for committing, branching, and viewing PR metadata
 
 ## Phase 6: Prompt Polisher (Sprint 14)
 - ⭕ **Sprint 14: Prompt Optimization**

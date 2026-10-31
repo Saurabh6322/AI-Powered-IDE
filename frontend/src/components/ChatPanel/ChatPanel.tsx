@@ -35,6 +35,12 @@ interface OllamaModel {
   size: number;
 }
 
+interface AgentPersona {
+  name: string;
+  display_name: string;
+  icon: string;
+}
+
 export default function ChatPanel() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -44,6 +50,8 @@ export default function ChatPanel() {
   const [selectedModel, setSelectedModel] = useState("");
   const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
   const [useContext, setUseContext] = useState(false);
+  const [personas, setPersonas] = useState<AgentPersona[]>([]);
+  const [selectedPersona, setSelectedPersona] = useState("general");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -64,6 +72,11 @@ export default function ChatPanel() {
         setModels(data.models || []);
         setSelectedModel(data.default || "");
       })
+      .catch(() => {});
+
+    fetch("/api/agents/personas")
+      .then((r) => r.json())
+      .then((data) => setPersonas(data.personas || []))
       .catch(() => {});
   }, []);
 
@@ -101,6 +114,7 @@ export default function ChatPanel() {
             }),
             model: selectedModel || undefined,
             use_context: useContext,
+            persona: selectedPersona,
           }),
         });
 
@@ -163,7 +177,7 @@ export default function ChatPanel() {
         setIsStreaming(false);
       }
     },
-    [input, isStreaming, messages, selectedModel]
+    [input, isStreaming, messages, selectedModel, selectedPersona]
   );
 
   // Keep sendMessageRef in sync
@@ -241,6 +255,19 @@ export default function ChatPanel() {
               {models.map((m) => (
                 <option key={m.name} value={m.name}>
                   {m.name}
+                </option>
+              ))}
+            </select>
+          )}
+          {personas.length > 0 && (
+            <select
+              className={styles.personaSelect}
+              value={selectedPersona}
+              onChange={(e) => setSelectedPersona(e.target.value)}
+            >
+              {personas.map((p) => (
+                <option key={p.name} value={p.name}>
+                  {p.icon} {p.display_name}
                 </option>
               ))}
             </select>

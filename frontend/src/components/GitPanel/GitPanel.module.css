@@ -1,0 +1,357 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Init state */
+.initContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.initIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+
+.initTitle {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+}
+
+.initHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: 0 0 16px;
+  max-width: 220px;
+}
+
+.initBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.initBtn:hover {
+  opacity: 0.9;
+}
+
+.initBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Branch header */
+.branchHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
+}
+
+.branchIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.branchSelect {
+  flex: 1;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+
+.branchSelect:focus {
+  border-color: var(--accent);
+}
+
+.error {
+  padding: 6px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-size: 11px;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Scrollable content */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 2px;
+}
+
+/* Sections */
+.section {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 8px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.stageAllBtn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.stageAllBtn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* File groups */
+.fileGroup {
+  margin-bottom: 6px;
+}
+
+.groupLabel {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+  padding-left: 2px;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: background 0.15s;
+}
+
+.fileItem:hover {
+  background: var(--bg-tertiary);
+}
+
+.changeType {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.added {
+  color: #22c55e;
+}
+
+.modified {
+  color: #eab308;
+}
+
+.deleted {
+  color: #ef4444;
+}
+
+.fileName {
+  flex: 1;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.fileAction {
+  background: none;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-secondary);
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  opacity: 0;
+}
+
+.fileItem:hover .fileAction {
+  opacity: 1;
+}
+
+.fileAction:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.noChanges {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  text-align: center;
+  padding: 8px 0;
+  margin: 0;
+}
+
+/* Commit section */
+.commitInput {
+  width: 100%;
+  resize: none;
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  outline: none;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.commitInput:focus {
+  border-color: var(--accent);
+}
+
+.commitInput::placeholder {
+  color: var(--text-muted);
+}
+
+.commitBtn {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.commitBtn:hover {
+  opacity: 0.9;
+}
+
+.commitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Commit history */
+.commitList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.commitItem {
+  padding: 5px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.commitItem:hover {
+  background: var(--bg-tertiary);
+}
+
+.commitTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1px;
+}
+
+.commitHash {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.commitDate {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.commitMessage {
+  font-size: 11px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
