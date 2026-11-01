@@ -2,13 +2,13 @@
  * ChatPanel — AI assistant slide-out panel.
  *
  * Features:
- *  - Streaming SSE responses from Ollama via the backend
+ *  - Multi-provider support: Ollama (local), Groq (cloud), Gemini (cloud)
+ *  - Streaming SSE responses via the backend
  *  - Markdown rendering with syntax-highlighted code blocks
- *  - Copy button on code blocks
- *  - Apply to Editor button on code blocks (dispatches ai-insert event)
- *  - Model picker dropdown
- *  - Ollama online/offline status indicator
- *  - Listens for `ai-prompt` custom events from the editor's context menu
+ *  - Copy / Apply-to-Editor buttons on code blocks
+ *  - Provider + model picker with status indicators
+ *  - Agent persona selector
+ *  - Persists last-selected provider+model in localStorage
  */
 
 import {
@@ -24,15 +24,27 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import styles from "./ChatPanel.module.css";
 
+const API_BASE = "/api";
+
 interface ChatMessage {
   role: "user" | "assistant" | "tool";
   content: string;
   tool_calls?: any[];
 }
 
-interface OllamaModel {
+interface ProviderModel {
   name: string;
-  size: number;
+  [key: string]: any;
+}
+
+interface ProviderInfo {
+  id: string;
+  display_name: string;
+  type: "local" | "cloud";
+  online: boolean;
+  error?: string;
+  models: ProviderModel[];
+  default_model: string;
 }
 
 interface AgentPersona {
@@ -41,51 +53,92 @@ interface AgentPersona {
   icon: string;
 }
 
+function loadSaved<T>(key: string, fallback: T): T {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? (JSON.parse(v) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export default function ChatPanel() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const [ollamaOnline, setOllamaOnline] = useState<boolean | null>(null);
-  const [models, setModels] = useState<OllamaModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState("");
   const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
   const [useContext, setUseContext] = useState(false);
+
+  // Provider state
+  const [providers, setProviders] = useState<ProviderInfo[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState<string>(
+    () => loadSaved("ide-ai-provider", "ollama")
+  );
+  const [selectedModel, setSelectedModel] = useState<string>(
+    () => loadSaved("ide-ai-model", "")
+  );
+
+  // Persona state
   const [personas, setPersonas] = useState<AgentPersona[]>([]);
   const [selectedPersona, setSelectedPersona] = useState("general");
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  // We use a ref for the streaming function so the event listener
-  // always calls the latest version without re-registering.
   const sendMessageRef = useRef<((text?: string) => Promise<void>) | undefined>(undefined);
 
-  // Check Ollama status & load models on mount
+  // Fetch providers + personas on mount
   useEffect(() => {
-    fetch("/api/ai/status")
-      .then((r) => r.json())
-      .then((data) => setOllamaOnline(data.online))
-      .catch(() => setOllamaOnline(false));
-
-    fetch("/api/ai/models")
+    fetch(`${API_BASE}/ai/providers`)
       .then((r) => r.json())
       .then((data) => {
-        setModels(data.models || []);
-        setSelectedModel(data.default || "");
+        const provs: ProviderInfo[] = data.providers || [];
+        setProviders(provs);
+
+        // If the saved provider doesn't exist or is offline, fall back to first online
+        const saved = provs.find((p) => p.id === selectedProvider);
+        if (!saved || !saved.online) {
+          const fallback = provs.find((p) => p.online);
+          if (fallback) {
+            setSelectedProvider(fallback.id);
+            setSelectedModel(fallback.default_model);
+          }
+        } else if (!selectedModel) {
+          setSelectedModel(saved.default_model);
+        }
       })
       .catch(() => {});
 
-    fetch("/api/agents/personas")
+    fetch(`${API_BASE}/agents/personas`)
       .then((r) => r.json())
       .then((data) => setPersonas(data.personas || []))
       .catch(() => {});
   }, []);
 
-  // Auto-scroll to bottom on new messages
+  // Persist selection
+  useEffect(() => {
+    try {
+      localStorage.setItem("ide-ai-provider", JSON.stringify(selectedProvider));
+      localStorage.setItem("ide-ai-model", JSON.stringify(selectedModel));
+    } catch {}
+  }, [selectedProvider, selectedModel]);
+
+  // Auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const currentProvider = providers.find((p) => p.id === selectedProvider);
+  const availableModels = currentProvider?.models || [];
+
+  const handleProviderChange = (providerId: string) => {
+    setSelectedProvider(providerId);
+    const prov = providers.find((p) => p.id === providerId);
+    if (prov) {
+      setSelectedModel(prov.default_model);
+    }
+  };
 
   const sendMessage = useCallback(
     async (overrideText?: string) => {
@@ -98,12 +151,11 @@ export default function ChatPanel() {
       if (!overrideText) setInput("");
       setIsStreaming(true);
 
-      // Add empty assistant message that we'll stream into
       const assistantMsg: ChatMessage = { role: "assistant", content: "" };
       setMessages([...updatedMessages, assistantMsg]);
 
       try {
-        const resp = await fetch("/api/agents/chat", {
+        const resp = await fetch(`${API_BASE}/agents/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -113,6 +165,7 @@ export default function ChatPanel() {
               return msg;
             }),
             model: selectedModel || undefined,
+            provider: selectedProvider,
             use_context: useContext,
             persona: selectedPersona,
           }),
@@ -153,7 +206,6 @@ export default function ChatPanel() {
             }
           }
 
-          // Update the last (assistant) message with accumulated content
           setMessages((prev) => {
             const copy = [...prev];
             copy[copy.length - 1] = {
@@ -177,25 +229,22 @@ export default function ChatPanel() {
         setIsStreaming(false);
       }
     },
-    [input, isStreaming, messages, selectedModel, selectedPersona]
+    [input, isStreaming, messages, selectedModel, selectedProvider, selectedPersona, useContext]
   );
 
-  // Keep sendMessageRef in sync
   useEffect(() => {
     sendMessageRef.current = sendMessage;
   }, [sendMessage]);
 
-  // Listen for `ai-prompt` events from the editor's context menu
+  // Listen for `ai-prompt` events from the editor context menu
   useEffect(() => {
     const handleAiPrompt = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (!detail?.prompt) return;
-      // Use a short delay to ensure the chat panel has mounted
       setTimeout(() => {
         sendMessageRef.current?.(detail.prompt);
       }, 100);
     };
-
     window.addEventListener("ai-prompt", handleAiPrompt);
     return () => window.removeEventListener("ai-prompt", handleAiPrompt);
   }, []);
@@ -214,9 +263,7 @@ export default function ChatPanel() {
   };
 
   const applyToEditor = (code: string) => {
-    window.dispatchEvent(
-      new CustomEvent("ai-insert", { detail: { code } })
-    );
+    window.dispatchEvent(new CustomEvent("ai-insert", { detail: { code } }));
   };
 
   return (
@@ -230,35 +277,35 @@ export default function ChatPanel() {
           <span className={styles.headerTitle}>AI Assistant</span>
         </div>
         <div className={styles.headerRight}>
-          <span
-            className={`${styles.statusDot} ${
-              ollamaOnline === true
-                ? styles.online
-                : ollamaOnline === false
-                ? styles.offline
-                : styles.checking
-            }`}
-            title={
-              ollamaOnline === true
-                ? "Ollama Online"
-                : ollamaOnline === false
-                ? "Ollama Offline"
-                : "Checking..."
-            }
-          />
-          {models.length > 0 && (
+          {/* Provider picker */}
+          <select
+            className={styles.providerSelect}
+            value={selectedProvider}
+            onChange={(e) => handleProviderChange(e.target.value)}
+          >
+            {providers.map((p) => (
+              <option key={p.id} value={p.id} disabled={!p.online}>
+                {p.online ? "●" : "○"} {p.display_name}
+              </option>
+            ))}
+          </select>
+
+          {/* Model picker */}
+          {availableModels.length > 0 && (
             <select
               className={styles.modelSelect}
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
             >
-              {models.map((m) => (
+              {availableModels.map((m) => (
                 <option key={m.name} value={m.name}>
                   {m.name}
                 </option>
               ))}
             </select>
           )}
+
+          {/* Persona picker */}
           {personas.length > 0 && (
             <select
               className={styles.personaSelect}
@@ -274,6 +321,14 @@ export default function ChatPanel() {
           )}
         </div>
       </header>
+
+      {/* Provider status banner */}
+      {currentProvider && !currentProvider.online && (
+        <div className={styles.statusBanner}>
+          ⚠️ {currentProvider.display_name} is offline
+          {currentProvider.error && `: ${currentProvider.error}`}
+        </div>
+      )}
 
       {/* Messages */}
       <div className={styles.messages} ref={scrollRef}>
@@ -293,8 +348,13 @@ export default function ChatPanel() {
               Ask me to write code, explain concepts, or debug issues.
             </p>
             <p className={styles.emptyHint}>
-              💡 Select code in the editor → right-click → <strong>AI: Explain Code</strong>
+              Select code in the editor → right-click → <strong>AI: Explain Code</strong>
             </p>
+            {providers.filter((p) => p.type === "cloud" && p.online).length > 0 && (
+              <p className={styles.emptyHint}>
+                Cloud models available — switch providers in the header dropdown.
+              </p>
+            )}
           </div>
         )}
 
@@ -311,7 +371,10 @@ export default function ChatPanel() {
               ) : msg.role === "tool" ? (
                 <div className={styles.toolResult}>
                   <span className={styles.toolIcon}>🛠️</span>
-                  <span className={styles.toolText}>Tool result: {msg.content.substring(0, 100)}{msg.content.length > 100 ? "..." : ""}</span>
+                  <span className={styles.toolText}>
+                    Tool result: {msg.content.substring(0, 100)}
+                    {msg.content.length > 100 ? "..." : ""}
+                  </span>
                 </div>
               ) : (
                 <div className={styles.markdown}>
@@ -326,9 +389,7 @@ export default function ChatPanel() {
                           return (
                             <div className={styles.codeBlock}>
                               <div className={styles.codeHeader}>
-                                <span className={styles.codeLang}>
-                                  {match[1]}
-                                </span>
+                                <span className={styles.codeLang}>{match[1]}</span>
                                 <div className={styles.codeActions}>
                                   <button
                                     className={styles.applyBtn}
@@ -339,9 +400,7 @@ export default function ChatPanel() {
                                   </button>
                                   <button
                                     className={styles.copyBtn}
-                                    onClick={() =>
-                                      copyToClipboard(codeString, blockId)
-                                    }
+                                    onClick={() => copyToClipboard(codeString, blockId)}
                                     title="Copy code"
                                   >
                                     {copiedIndex === blockId ? "✓" : "📋"}
@@ -375,7 +434,6 @@ export default function ChatPanel() {
                       (isStreaming && i === messages.length - 1 && !msg.tool_calls ? "●" : "")}
                   </ReactMarkdown>
 
-                  {/* Tool Calls Rendering */}
                   {msg.tool_calls && msg.tool_calls.length > 0 && (
                     <div className={styles.toolCalls}>
                       <div className={styles.toolCallsTitle}>Planned Actions:</div>
@@ -383,15 +441,15 @@ export default function ChatPanel() {
                         <div key={idx} className={styles.toolCallItem}>
                           <strong>{tc.function?.name}</strong>(
                           <span className={styles.toolCallArgs}>
-                            {typeof tc.function?.arguments === 'string' 
-                              ? tc.function?.arguments 
+                            {typeof tc.function?.arguments === "string"
+                              ? tc.function?.arguments
                               : JSON.stringify(tc.function?.arguments)}
                           </span>
                           )
                         </div>
                       ))}
                       {i === messages.length - 1 && !isStreaming && (
-                        <button 
+                        <button
                           className={styles.approveBtn}
                           onClick={() => sendMessage("Looks good, proceed.")}
                         >
@@ -415,7 +473,7 @@ export default function ChatPanel() {
         )}
       </div>
 
-      {/* Input */}
+      {/* Input area */}
       <div className={styles.contextToggle}>
         <label>
           <input

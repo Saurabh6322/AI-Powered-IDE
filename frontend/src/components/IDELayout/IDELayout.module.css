@@ -67,6 +67,61 @@
   border-color: var(--accent);
 }
 
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding-left: 6px;
+  border-left: 1px solid var(--border-secondary);
+}
+
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userName {
+  font-size: 11px;
+  color: var(--text-secondary);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.logoutBtn:hover {
+  color: #ef4444;
+}
+
 .layout {
   display: grid;
   flex: 1;

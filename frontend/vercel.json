@@ -1,0 +1,19 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://antigravity-ide-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/ws/:path*",
+      "destination": "https://antigravity-ide-backend.onrender.com/ws/:path*"
+    },
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

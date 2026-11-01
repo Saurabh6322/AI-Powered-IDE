@@ -1,0 +1,29 @@
+# Render Blueprint — deploy backend as a web service (free tier)
+services:
+  - type: web
+    name: antigravity-ide-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./ide_users.db
+      - key: OLLAMA_BASE_URL
+        value: http://localhost:11434
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OAUTH_REDIRECT_BASE
+        sync: false

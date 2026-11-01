@@ -1,0 +1,132 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.panel {
+  width: 600px;
+  max-height: 500px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.searchRow {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-primary);
+}
+
+.input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  outline: none;
+  font-family: var(--font-sans);
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.searchBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.searchBtn:disabled {
+  opacity: 0.5;
+}
+
+.results {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+}
+
+.results::-webkit-scrollbar {
+  width: 4px;
+}
+
+.results::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 2px;
+}
+
+.fileGroup {
+  margin-bottom: 8px;
+}
+
+.fileName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.resultItem {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 8px 4px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-mono);
+  border-radius: 4px;
+}
+
+.resultItem:hover {
+  background: var(--bg-tertiary);
+}
+
+.lineNum {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.lineText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}

@@ -134,6 +134,52 @@ def delete_entry(file_path: str) -> dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
+# Workspace-wide text search
+# ---------------------------------------------------------------------------
+
+SEARCH_SKIP_DIRS = {
+    "node_modules", ".git", "__pycache__", "venv", ".venv",
+    "dist", "build", ".next", ".cache", "chroma_data",
+}
+SEARCH_MAX_RESULTS = 200
+
+@router.get("/search/text")
+def search_text(q: str, max_results: int = SEARCH_MAX_RESULTS) -> dict[str, Any]:
+    """Grep-like workspace search. Returns matching lines with context."""
+    if not q or len(q) < 2:
+        raise HTTPException(status_code=400, detail="Query must be at least 2 characters")
+    results: list[dict[str, Any]] = []
+    query_lower = q.lower()
+
+    for root_dir, dirs, files in os.walk(WORKSPACE_ROOT):
+        dirs[:] = [d for d in dirs if d not in SEARCH_SKIP_DIRS and not d.startswith(".")]
+        for fname in files:
+            if len(results) >= max_results:
+                break
+            fpath = Path(root_dir) / fname
+            if fpath.suffix not in {
+                ".py", ".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".md",
+                ".json", ".yaml", ".yml", ".toml", ".sql", ".sh", ".go",
+                ".rs", ".java", ".c", ".cpp", ".h", ".txt", ".cfg", ".ini",
+            }:
+                continue
+            try:
+                text = fpath.read_text(encoding="utf-8", errors="ignore")
+            except (PermissionError, OSError):
+                continue
+            for line_num, line in enumerate(text.splitlines(), 1):
+                if query_lower in line.lower():
+                    results.append({
+                        "file": str(fpath.relative_to(WORKSPACE_ROOT)).replace("\\", "/"),
+                        "line": line_num,
+                        "text": line.strip()[:200],
+                    })
+                    if len(results) >= max_results:
+                        break
+    return {"query": q, "results": results, "total": len(results)}
+
+
+# ---------------------------------------------------------------------------
 # File-system watcher (WebSocket)
 # ---------------------------------------------------------------------------
 

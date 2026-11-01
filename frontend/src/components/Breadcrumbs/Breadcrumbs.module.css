@@ -1,0 +1,41 @@
+.bar {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  min-height: 24px;
+}
+
+.bar::-webkit-scrollbar {
+  height: 0;
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+}
+
+.sep {
+  margin: 0 4px;
+  opacity: 0.4;
+}
+
+.part {
+  cursor: default;
+  color: var(--text-muted);
+}
+
+.part:hover {
+  color: var(--text-primary);
+}
+
+.current {
+  color: var(--text-primary);
+  font-weight: 500;
+}

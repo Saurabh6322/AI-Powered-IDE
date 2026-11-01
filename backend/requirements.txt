@@ -12,3 +12,5 @@ chromadb
 redis
 rq
 gitpython
+bcrypt
+PyJWT

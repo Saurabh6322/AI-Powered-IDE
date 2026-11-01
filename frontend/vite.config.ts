@@ -24,6 +24,12 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      // Forward /ws requests (LSP, terminal, etc.) to FastAPI
+      '/ws': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        ws: true,
+      },
     },
   },
 })

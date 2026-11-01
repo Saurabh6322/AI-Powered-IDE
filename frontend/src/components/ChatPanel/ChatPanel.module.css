@@ -74,22 +74,8 @@
   50% { opacity: 1; }
 }
 
-.modelSelect {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid var(--border-secondary);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  outline: none;
-  max-width: 140px;
-  cursor: pointer;
-}
-
-.modelSelect:focus {
-  border-color: var(--accent);
-}
-
+.providerSelect,
+.modelSelect,
 .personaSelect {
   font-size: 11px;
   padding: 2px 6px;
@@ -98,12 +84,24 @@
   background: var(--bg-primary);
   color: var(--text-secondary);
   outline: none;
-  max-width: 140px;
+  max-width: 150px;
   cursor: pointer;
 }
 
+.providerSelect:focus,
+.modelSelect:focus,
 .personaSelect:focus {
   border-color: var(--accent);
+}
+
+.statusBanner {
+  padding: 6px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  font-size: 11px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 /* Messages area */

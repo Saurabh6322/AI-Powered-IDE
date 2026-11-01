@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from routers.auth import router as auth_router
 from routers.files import router as files_router
 from routers.terminal import router as terminal_router
 from routers.collab import router as collab_router
@@ -8,6 +9,7 @@ from routers.ai import router as ai_router
 from routers.rag import router as rag_router
 from routers.agents import router as agents_router
 from routers.git import router as git_router
+from routers.lsp import router as lsp_router
 
 app = FastAPI(title="AI-Powered IDE Backend")
 
@@ -26,6 +28,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 # Routers
 # ---------------------------------------------------------------------------
+app.include_router(auth_router)
 app.include_router(files_router)
 app.include_router(terminal_router)
 app.include_router(collab_router)
@@ -33,6 +36,7 @@ app.include_router(ai_router)
 app.include_router(rag_router)
 app.include_router(agents_router)
 app.include_router(git_router)
+app.include_router(lsp_router)
 
 
 @app.get("/api/health")

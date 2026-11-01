@@ -7,6 +7,7 @@
 import { useState, useCallback } from "react";
 import { useWorkspaceState } from "../../contexts/WorkspaceContext";
 import TabBar from "../TabBar/TabBar";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import MonacoEditorWrapper from "../MonacoEditor/MonacoEditor";
 import TerminalPane from "../Terminal/TerminalPane";
 import HorizontalResizeHandle from "../ResizeHandle/HorizontalResizeHandle";
@@ -37,6 +38,7 @@ export default function EditorPane() {
       {/* Top half: Tab bar and Editor */}
       <div className={styles.editorSection}>
         <TabBar />
+        <Breadcrumbs />
 
         {activeFile ? (
           <MonacoEditorWrapper file={activeFile} />

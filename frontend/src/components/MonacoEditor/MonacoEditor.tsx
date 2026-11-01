@@ -9,7 +9,7 @@
  * - Listens for `ai-insert` custom events to insert AI-generated code at cursor
  */
 
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { MonacoBinding } from "y-monaco";
@@ -20,6 +20,7 @@ import {
 import { useFileSystem } from "../../hooks/useFileSystem";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useCollaboration } from "../../contexts/CollaborationContext";
+import { useLSPMonaco } from "../../hooks/useLSPMonaco";
 import styles from "./MonacoEditor.module.css";
 
 interface MonacoEditorWrapperProps {
@@ -33,6 +34,16 @@ export default function MonacoEditorWrapper({ file }: MonacoEditorWrapperProps) 
   const { doc, provider } = useCollaboration();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const bindingRef = useRef<MonacoBinding | null>(null);
+  const [monacoRef, setMonacoRef] = useState<typeof import("monaco-editor") | null>(null);
+
+  // LSP integration
+  const { sendDidChange } = useLSPMonaco(
+    editorRef.current,
+    monacoRef,
+    file.language,
+    file.path,
+    file.content
+  );
 
   // Map our theme names to Monaco theme identifiers
   const monacoTheme = theme === "light" ? "vs" : "vs-dark";
@@ -40,6 +51,7 @@ export default function MonacoEditorWrapper({ file }: MonacoEditorWrapperProps) 
   const handleMount: OnMount = useCallback(
     (editorInstance, monacoInstance) => {
       editorRef.current = editorInstance;
+      setMonacoRef(monacoInstance);
 
       // Register Ctrl+S / Cmd+S to save
       editorInstance.addAction({
@@ -129,6 +141,15 @@ export default function MonacoEditorWrapper({ file }: MonacoEditorWrapperProps) 
         );
       }
 
+      // Emit cursor position for the StatusBar
+      editorInstance.onDidChangeCursorPosition((e) => {
+        window.dispatchEvent(
+          new CustomEvent("cursor-position", {
+            detail: { line: e.position.lineNumber, col: e.position.column },
+          })
+        );
+      });
+
       editorInstance.focus();
     },
     [file.path, file.content, file.language, writeFile, dispatch, doc, provider]
@@ -171,9 +192,10 @@ export default function MonacoEditorWrapper({ file }: MonacoEditorWrapperProps) 
     (value: string | undefined) => {
       if (value !== undefined) {
         dispatch({ type: "UPDATE_CONTENT", path: file.path, content: value });
+        sendDidChange(value);
       }
     },
-    [file.path, dispatch]
+    [file.path, dispatch, sendDidChange]
   );
 
   return (
