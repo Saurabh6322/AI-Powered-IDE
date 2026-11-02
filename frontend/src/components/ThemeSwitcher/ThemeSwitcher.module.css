@@ -6,7 +6,7 @@
   height: 28px;
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -19,7 +19,12 @@
 }
 
 .icon {
-  width: 16px;
-  height: 16px;
-  transition: color var(--transition-normal);
+  width: 14px;
+  height: 14px;
+  transition: color var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.themeBtn:hover .icon {
+  color: var(--accent);
 }

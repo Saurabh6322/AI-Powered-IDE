@@ -2,14 +2,13 @@
   display: flex;
   align-items: stretch;
   height: var(--tab-height);
-  background: var(--tab-bg);
-  border-bottom: 1px solid var(--tab-border);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
   overflow-x: auto;
   overflow-y: hidden;
   flex-shrink: 0;
 }
 
-/* Hide scrollbar but keep scrollable */
 .tabBar::-webkit-scrollbar {
   height: 0;
 }
@@ -17,12 +16,11 @@
 .tab {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 12px;
+  gap: 8px;
+  padding: 0 14px;
   height: 100%;
   border: none;
-  border-right: 1px solid var(--tab-border);
-  background: var(--tab-bg);
+  background: transparent;
   color: var(--text-muted);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
@@ -33,24 +31,24 @@
 }
 
 .tab:hover {
-  background: var(--tab-hover-bg);
+  background: var(--bg-hover);
   color: var(--text-secondary);
 }
 
 .tab.active {
-  background: var(--tab-active-bg);
+  background: var(--bg-primary);
   color: var(--text-primary);
 }
 
-/* Active indicator bar */
-.tab.active::after {
+.tab.active::before {
   content: "";
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   height: 2px;
   background: var(--accent);
+  border-radius: 0 0 2px 2px;
 }
 
 .tabName {
@@ -60,23 +58,25 @@
 }
 
 .dirty {
-  color: var(--accent);
-  font-size: 8px;
-  line-height: 1;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .closeBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
   font-size: 16px;
   line-height: 1;
   color: var(--text-muted);
   opacity: 0;
-  transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .tab:hover .closeBtn {
@@ -84,6 +84,6 @@
 }
 
 .closeBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--color-error);
 }

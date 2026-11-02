@@ -2,7 +2,7 @@
   width: var(--resize-handle-width);
   cursor: col-resize;
   background: var(--resize-handle);
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
   position: relative;
   z-index: 10;
   flex-shrink: 0;
@@ -10,7 +10,8 @@
 
 .handle:hover,
 .handle:active {
-  background: var(--resize-handle-hover);
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 /* Wider invisible hit area */
@@ -19,6 +20,6 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -4px;
-  right: -4px;
+  left: calc(-1 * var(--resize-hit-area) / 2);
+  right: calc(-1 * var(--resize-hit-area) / 2);
 }

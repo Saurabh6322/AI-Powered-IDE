@@ -7,42 +7,56 @@
   background-color: var(--bg-primary);
 }
 
+/* ---- Top Bar: 44px, translucent, backdrop-blur ---- */
 .titleBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 32px;
-  padding: 0 12px;
+  height: var(--topbar-height);
+  padding: 0 16px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
   flex-shrink: 0;
   user-select: none;
-  -webkit-app-region: drag; /* allows window dragging in Electron-like envs */
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 100;
 }
 
 .titleText {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titleLogo {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
 .titleActions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   -webkit-app-region: no-drag;
 }
 
-.aiToggle {
+/* Uniform 32px icon buttons */
+.iconBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
+  border: none;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
@@ -50,42 +64,42 @@
   flex-shrink: 0;
 }
 
-.aiToggle svg {
+.iconBtn svg {
   width: 16px;
   height: 16px;
 }
 
-.aiToggle:hover {
+.iconBtn:hover {
   background: var(--bg-tertiary);
-  border-color: var(--border-secondary);
-  color: var(--accent);
+  color: var(--text-secondary);
 }
 
-.aiToggleActive {
+.iconBtnActive {
   color: var(--accent);
-  background: var(--bg-tertiary);
-  border-color: var(--accent);
+  background: var(--accent-muted);
 }
 
+/* ---- User Info ---- */
 .userInfo {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-left: 4px;
-  padding-left: 6px;
-  border-left: 1px solid var(--border-secondary);
+  padding-left: 8px;
+  border-left: 1px solid var(--border-primary);
 }
 
 .avatar {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1.5px solid var(--border-secondary);
 }
 
 .avatarFallback {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
@@ -97,12 +111,13 @@
 }
 
 .userName {
-  font-size: 11px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .logoutBtn {
@@ -113,15 +128,17 @@
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 2px;
-  border-radius: 4px;
-  transition: color 0.15s;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .logoutBtn:hover {
-  color: #ef4444;
+  color: var(--color-error);
+  background: rgba(248, 113, 113, 0.10);
 }
 
+/* ---- Main Layout Grid ---- */
 .layout {
   display: grid;
   flex: 1;

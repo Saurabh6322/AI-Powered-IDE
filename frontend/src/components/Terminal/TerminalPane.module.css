@@ -9,18 +9,31 @@
 .header {
   display: flex;
   align-items: center;
-  padding: 4px 16px;
+  padding: 6px 16px;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-primary);
+  border-top: 1px solid var(--border-primary);
   flex-shrink: 0;
+  gap: 10px;
 }
 
 .title {
   font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--text-secondary);
-  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.title::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-success);
 }
 
 .terminalWrapper {
@@ -29,7 +42,6 @@
   overflow: hidden;
 }
 
-/* Override xterm scrollbar to match our theme */
 .terminalWrapper :global(.xterm-viewport) {
   background-color: transparent !important;
 }

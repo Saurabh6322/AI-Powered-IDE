@@ -39,7 +39,7 @@ export default function AuthPage() {
           <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
             <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" />
           </svg>
-          <h1 className={styles.title}>Antigravity IDE</h1>
+          <h1 className={styles.title}>AI Powered IDE</h1>
         </div>
 
         <p className={styles.subtitle}>

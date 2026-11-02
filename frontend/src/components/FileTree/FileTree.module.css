@@ -4,15 +4,12 @@
   padding: 0;
 }
 
-.item {
-  /* nothing special on the li itself */
-}
+.item {}
 
 .row {
   display: flex;
   align-items: center;
   gap: 4px;
-  width: 100%;
   height: var(--tree-item-height);
   padding-right: 12px;
   border: none;
@@ -25,6 +22,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: var(--radius-sm);
+  margin: 1px 6px;
+  width: calc(100% - 12px);
 }
 
 .row:hover {
@@ -37,12 +37,11 @@
   color: var(--text-primary);
 }
 
-/* Chevron */
 .chevron {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
-  transition: transform var(--transition-fast);
+  transition: transform 150ms ease-out;
   color: var(--text-muted);
 }
 
@@ -55,12 +54,12 @@
   flex-shrink: 0;
 }
 
-/* File / folder icon */
 .fileIcon {
   width: 15px;
   height: 15px;
   flex-shrink: 0;
   color: var(--text-muted);
+  transition: color var(--transition-fast);
 }
 
 .row:hover .fileIcon {
@@ -71,7 +70,6 @@
   color: var(--accent);
 }
 
-/* File name */
 .name {
   overflow: hidden;
   text-overflow: ellipsis;

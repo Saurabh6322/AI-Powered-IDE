@@ -2,7 +2,7 @@
   height: var(--resize-handle-width);
   cursor: row-resize;
   background: var(--resize-handle);
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
   position: relative;
   z-index: 10;
   flex-shrink: 0;
@@ -10,15 +10,15 @@
 
 .handle:hover,
 .handle:active {
-  background: var(--resize-handle-hover);
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
-/* Wider invisible hit area */
 .handle::before {
   content: "";
   position: absolute;
-  top: -4px;
-  bottom: -4px;
+  top: calc(-1 * var(--resize-hit-area) / 2);
+  bottom: calc(-1 * var(--resize-hit-area) / 2);
   left: 0;
   right: 0;
 }

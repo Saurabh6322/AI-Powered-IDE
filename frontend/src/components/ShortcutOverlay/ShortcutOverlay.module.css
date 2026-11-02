@@ -2,41 +2,57 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.50);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: overlayIn 0.12s ease-out;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .sheet {
-  width: 460px;
+  width: 480px;
   background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
-  padding: 24px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 28px;
+  animation: sheetIn 0.2s ease-out;
+}
+
+@keyframes sheetIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .title {
-  margin: 0 0 16px;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--text-primary);
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .grid {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
 }
 
 .row:hover {
@@ -44,23 +60,25 @@
 }
 
 .keys {
-  font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--bg-primary);
+  font-size: var(--font-size-xs);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
   border: 1px solid var(--border-secondary);
+  border-bottom-width: 2px;
   color: var(--text-primary);
   font-family: var(--font-mono);
+  font-weight: 500;
 }
 
 .desc {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
 
 .hint {
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   text-align: center;
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--text-muted);
 }

@@ -2,11 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 24px;
+  height: var(--statusbar-height);
   padding: 0 12px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 11px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-primary);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
   flex-shrink: 0;
   user-select: none;
   z-index: 50;
@@ -16,18 +18,26 @@
 .right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  opacity: 0.9;
+  gap: 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 300px;
+  transition: color var(--transition-fast);
+  cursor: default;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.item:hover {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
 }
 
 .item svg {

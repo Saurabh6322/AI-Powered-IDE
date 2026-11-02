@@ -2,33 +2,48 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.50);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
   display: flex;
   justify-content: center;
-  padding-top: 80px;
+  padding-top: 15vh;
+  animation: overlayIn 0.12s ease-out;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .palette {
-  width: 520px;
-  max-height: 400px;
+  width: 540px;
+  max-height: 420px;
   background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  border-radius: 10px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  animation: paletteIn 0.15s ease-out;
+}
+
+@keyframes paletteIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .input {
-  padding: 12px 16px;
-  font-size: 14px;
+  padding: 14px 20px;
+  font-size: var(--font-size-md);
   border: none;
   border-bottom: 1px solid var(--border-primary);
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
   outline: none;
   font-family: var(--font-sans);
+  font-weight: 500;
 }
 
 .input::placeholder {
@@ -38,16 +53,16 @@
 .list {
   overflow-y: auto;
   flex: 1;
-  padding: 4px;
+  padding: 6px;
 }
 
 .list::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .list::-webkit-scrollbar-thumb {
-  background: var(--border-secondary);
-  border-radius: 2px;
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
 }
 
 .item {
@@ -55,20 +70,22 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border: none;
   background: transparent;
-  color: var(--text-primary);
-  font-size: 13px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   text-align: left;
   font-family: var(--font-sans);
+  transition: all var(--transition-fast);
 }
 
 .item:hover,
 .selected {
   background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .label {
@@ -81,24 +98,26 @@
 
 .category {
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
 }
 
 .shortcut {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: var(--bg-primary);
+  font-size: var(--font-size-xs);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
   border: 1px solid var(--border-secondary);
-  color: var(--text-secondary);
+  border-bottom-width: 2px;
+  color: var(--text-primary);
   font-family: var(--font-mono);
   margin-left: 12px;
   flex-shrink: 0;
+  font-weight: 500;
 }
 
 .empty {
-  padding: 16px;
+  padding: 32px;
   text-align: center;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--font-size-base);
 }

@@ -1,9 +1,8 @@
 .sidebar {
-  background-color: var(--sidebar-bg);
+  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-right: 1px solid var(--border-primary);
   user-select: none;
 }
 
@@ -19,18 +18,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 10px;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--transition-fast);
 }
 
 .tab:hover {
   color: var(--text-secondary);
-  background: var(--bg-tertiary);
+  background: var(--bg-hover);
 }
 
 .tabActive {
@@ -38,19 +37,19 @@
   border-bottom-color: var(--accent);
 }
 
+/* Section header */
 .header {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--border-primary);
   flex-shrink: 0;
 }
 
 .icon {
-  width: 16px;
-  height: 16px;
-  color: var(--text-secondary);
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -58,8 +57,8 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
 .treeContainer {
@@ -70,7 +69,7 @@
 }
 
 .empty {
-  padding: 16px;
+  padding: 32px 16px;
   color: var(--text-muted);
   font-size: var(--font-size-sm);
   text-align: center;

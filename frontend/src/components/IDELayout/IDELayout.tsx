@@ -115,17 +115,22 @@ export default function IDELayout() {
 
   return (
     <div className={styles.shell}>
-      {/* Title bar */}
+      {/* Top bar */}
       <header className={styles.titleBar}>
-        <span className={styles.titleText}>Antigravity IDE</span>
+        <span className={styles.titleText}>
+          <svg className={styles.titleLogo} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" />
+          </svg>
+          AI Powered IDE
+        </span>
         <div className={styles.titleActions}>
           <button
-            className={`${styles.aiToggle} ${chatOpen ? styles.aiToggleActive : ""}`}
+            className={`${styles.iconBtn} ${chatOpen ? styles.iconBtnActive : ""}`}
             onClick={() => setChatOpen((prev) => !prev)}
-            title={chatOpen ? "Close AI Assistant" : "Open AI Assistant"}
+            title={chatOpen ? "Close AI Assistant (Ctrl+J)" : "Open AI Assistant (Ctrl+J)"}
             aria-label="Toggle AI Assistant"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" />
             </svg>
           </button>
